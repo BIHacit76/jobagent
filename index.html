@@ -304,9 +304,13 @@ async function startAnalysis() {
     setProgress(Math.round((done / companies.length) * 88) + 5, co.name);
 
     try {
-      await fetch(`${WEBHOOK}?url=${encodeURIComponent(co.url)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cv=${encodeURIComponent(cvText.slice(0, 2000))}`, {
-        method: 'GET',
-        mode: 'no-cors'
+      // Koristimo Image ping tehniku koja zaobilazi CORS
+      await new Promise((resolve) => {
+        const img = new Image();
+        const webhookUrl = `${WEBHOOK}?url=${encodeURIComponent(co.url)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cv=${encodeURIComponent(cvText.slice(0, 1500))}`;
+        img.onload = img.onerror = resolve;
+        img.src = webhookUrl;
+        setTimeout(resolve, 3000);
       });
       results.push({ name: co.name, ok: true });
     } catch(e) {
