@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JobAgent — Pronađi posao uz AI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(window['pdfjs-dist/build/pdf']) window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -219,7 +221,7 @@ const companies = [
   { name: 'HelloWorld', url: 'https://www.helloworld.rs/oglasi' },
 ];
 
-let cvBase64 = '';
+let cvText = '';
 let cvFileName = '';
 
 // Drag & drop
@@ -235,23 +237,51 @@ function handleFile(input) {
   if (input.files[0]) processFile(input.files[0]);
 }
 
-function processFile(file) {
+async function processFile(file) {
   if (!file.name.match(/\.(pdf|doc|docx)$/i)) {
     setStatus('error', '⚠️', 'Neispravan format', 'Uploaduj PDF ili Word (.docx) fajl.');
     return;
   }
   cvFileName = file.name;
-  const reader = new FileReader();
-  reader.onload = () => {
-    cvBase64 = reader.result.split(',')[1];
-    document.getElementById('upload-default').style.display = 'none';
-    document.getElementById('upload-done').style.display = 'block';
-    document.getElementById('file-name').textContent = file.name;
-    document.getElementById('file-size').textContent = (file.size / 1024).toFixed(0) + ' KB · spreman za slanje';
-    zone.classList.add('uploaded');
-    setStep(2);
-  };
-  reader.readAsDataURL(file);
+  document.getElementById('upload-default').style.display = 'none';
+  document.getElementById('upload-done').style.display = 'block';
+  document.getElementById('file-name').textContent = file.name;
+  document.getElementById('file-size').textContent = (file.size / 1024).toFixed(0) + ' KB';
+  zone.classList.add('uploaded');
+  setStep(2);
+
+  if (file.name.endsWith('.pdf')) {
+    setStatus('loading', '📖', 'Čitam PDF...', 'Izvlačim tekst iz CV-a');
+    try {
+      cvText = await extractPdfText(file);
+      setStatus('success', '✅', 'CV pročitan!', `Izvučeno ${cvText.length} karaktera iz CV-a.`);
+    } catch(e) {
+      cvText = `CV fajl: ${file.name}`;
+      setStatus('success', '✅', 'CV uploadovan', 'Fajl je spreman za analizu.');
+    }
+  } else {
+    cvText = `CV fajl: ${file.name} (Word format)`;
+    setStatus('success', '✅', 'CV uploadovan', 'Za bolje rezultate preporučujemo PDF format.');
+  }
+  setStep(1);
+}
+
+async function extractPdfText(file) {
+  // Koristimo PDF.js za čitanje teksta iz PDF-a
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  if (!pdfjsLib) {
+    // Fallback — vraćamo naziv fajla
+    return `CV fajl: ${file.name}`;
+  }
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+  for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n';
+  }
+  return text.trim().slice(0, 4000);
 }
 
 async function startAnalysis() {
@@ -260,7 +290,7 @@ async function startAnalysis() {
 
   if (!name) { setStatus('error', '⚠️', 'Unesi ime', 'Ime i prezime su obavezni.'); return; }
   if (!email || !email.includes('@')) { setStatus('error', '⚠️', 'Neispravan email', 'Unesi ispravnu email adresu.'); return; }
-  if (!cvBase64) { setStatus('error', '⚠️', 'Uploaduj CV', 'Molim uploaduj PDF ili Word CV fajl.'); return; }
+  if (!cvText) { setStatus('error', '⚠️', 'Uploaduj CV', 'Molim uploaduj PDF ili Word CV fajl.'); return; }
 
   document.getElementById('submit-btn').disabled = true;
   document.getElementById('form-card').style.opacity = '0.6';
@@ -274,19 +304,9 @@ async function startAnalysis() {
     setProgress(Math.round((done / companies.length) * 88) + 5, co.name);
 
     try {
-      // Šaljemo CV kao base64 + ostale podatke na Make webhook
-      await fetch(WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          url: co.url,
-          company: co.name,
-          cv_filename: cvFileName,
-          cv_base64: cvBase64.slice(0, 50000) // max 50KB base64
-        })
+      await fetch(`${WEBHOOK}?url=${encodeURIComponent(co.url)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cv=${encodeURIComponent(cvText.slice(0, 2000))}`, {
+        method: 'GET',
+        mode: 'no-cors'
       });
       results.push({ name: co.name, ok: true });
     } catch(e) {
@@ -338,7 +358,7 @@ function setProgress(pct, label) {
 }
 
 function resetForm() {
-  cvBase64 = ''; cvFileName = '';
+  cvText = ''; cvFileName = '';
   document.getElementById('submit-btn').disabled = false;
   document.getElementById('form-card').style.opacity = '1';
   document.getElementById('status-box').className = 'status-box';
