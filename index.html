@@ -296,7 +296,6 @@ async function extractWordText(file) {
   const result = await mammoth.extractRawText({ arrayBuffer });
   return result.value.trim().slice(0, 4000);
 }
-}
 
 async function startAnalysis() {
   const name = document.getElementById('input-name').value.trim();
