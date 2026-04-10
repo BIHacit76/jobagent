@@ -390,8 +390,16 @@ async function startAnalysis() {
 
     try {
       // Fetch page via Cloudflare Worker → Jina (zaobilazi CORS)
-      const jinaRes = await fetch(`${MAKE_WEBHOOK}?action=scrape&url=${encodeURIComponent(co.url)}`, { signal: AbortSignal.timeout(15000) });
-      const pageText = jinaRes.ok ? (await jinaRes.text()).slice(0, 4000) : '';
+      let pageText = '';
+      try {
+        const jinaRes = await fetch(`${MAKE_WEBHOOK}?action=scrape&url=${encodeURIComponent(co.url)}`, { signal: AbortSignal.timeout(20000) });
+        const jinaText = jinaRes.ok ? await jinaRes.text() : '';
+        pageText = jinaText.includes('RateLimit') || jinaText.includes('Error') ? '' : jinaText.slice(0, 4000);
+      } catch(e) {
+        pageText = '';
+      }
+      // Pauza između zahtjeva da izbjegnemo rate limit
+      await new Promise(r => setTimeout(r, 2000));
 
       // Analyze with Claude
       const prompt = `Analiziraj oglase sa ove karijerne stranice i uporedi sa CV-om korisnika.
