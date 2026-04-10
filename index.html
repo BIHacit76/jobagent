@@ -429,9 +429,9 @@ PREPORUKA: [apliciraj / razmotri / preskoci]
 
 Ako nema relevantnih oglasa, vrati samo: NEMA_OGLASA`;
 
-      const res = await fetch(CLAUDE_API, {
+      const res = await fetch(`${MAKE_WEBHOOK}?action=claude`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-allow-browser': 'true' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
         body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
       });
 
