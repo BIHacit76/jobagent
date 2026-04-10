@@ -171,8 +171,12 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
   <div class="api-setup" id="api-setup">
     <div class="api-setup-title">🔑 Anthropic API ključ</div>
     <div class="api-setup-sub">Potreban za AI analizu. Idi na <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--orange)">console.anthropic.com</a> → Create Key → kopiraj ključ (sk-ant-...). Čuva se samo u tvom browseru.</div>
+    <div class="api-row" style="margin-bottom:8px">
+      <input class="api-field" id="api-key-input" type="password" placeholder="Anthropic API ključ: sk-ant-api03-...">
+    </div>
+    <div class="api-setup-sub" style="margin-top:8px">Jina.ai ključ za čitanje stranica. Idi na <a href="https://jina.ai" target="_blank" style="color:var(--orange)">jina.ai</a> → besplatan API ključ (jina_...).</div>
     <div class="api-row">
-      <input class="api-field" id="api-key-input" type="password" placeholder="sk-ant-api03-...">
+      <input class="api-field" id="jina-key-input" type="password" placeholder="Jina API ključ: jina_...">
       <button class="btn btn-primary btn-sm" style="width:auto" onclick="saveApiKey()">Sačuvaj</button>
     </div>
   </div>
@@ -278,6 +282,7 @@ const companies = [
 
 let cvText = '';
 let apiKey = localStorage.getItem('ja_apikey') || '';
+let jinaKey = localStorage.getItem('ja_jinakey') || '';
 
 function checkApiKey() {
   if (apiKey && apiKey.startsWith('sk-ant')) {
@@ -296,9 +301,15 @@ function showApiSetup() {
 
 function saveApiKey() {
   const val = document.getElementById('api-key-input').value.trim();
-  if (!val.startsWith('sk-ant')) { alert('Ključ mora počinjati sa sk-ant-...'); return; }
-  apiKey = val;
-  localStorage.setItem('ja_apikey', apiKey);
+  const jina = document.getElementById('jina-key-input').value.trim();
+  if (val && val.startsWith('sk-ant')) {
+    apiKey = val;
+    localStorage.setItem('ja_apikey', apiKey);
+  }
+  if (jina) {
+    jinaKey = jina;
+    localStorage.setItem('ja_jinakey', jinaKey);
+  }
   checkApiKey();
 }
 
@@ -392,7 +403,7 @@ async function startAnalysis() {
       // Fetch page via Cloudflare Worker → Jina (zaobilazi CORS)
       let pageText = '';
       try {
-        const jinaRes = await fetch(`${MAKE_WEBHOOK}?action=scrape&url=${encodeURIComponent(co.url)}`, { signal: AbortSignal.timeout(20000) });
+        const jinaRes = await fetch(`${MAKE_WEBHOOK}?action=scrape&url=${encodeURIComponent(co.url)}&jina_key=${encodeURIComponent(jinaKey)}`, { signal: AbortSignal.timeout(20000) });
         const jinaText = jinaRes.ok ? await jinaRes.text() : '';
         pageText = jinaText.includes('RateLimit') || jinaText.includes('Error') ? '' : jinaText.slice(0, 4000);
       } catch(e) {
