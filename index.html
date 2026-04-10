@@ -162,11 +162,11 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 
     <div class="form-group">
       <label class="form-label">CV fajl <span>*</span></label>
-      <div class="upload-zone" id="upload-zone">
-        <input class="upload-input" type="file" id="cv-file" accept=".pdf,.doc,.docx" onchange="handleFile(this)">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('cv-file').click()">
+        <input type="file" id="cv-file" accept=".pdf,.doc,.docx" onchange="handleFile(this)" style="display:none">
         <div id="upload-default">
           <div class="upload-icon">📄</div>
-          <div class="upload-title">Prevuci CV ovdje ili klikni da uploaduješ</div>
+          <div class="upload-title">Klikni da uploaduješ CV</div>
           <div class="upload-sub">AI agent čita CV i traži oglase koji ti odgovaraju</div>
           <div class="upload-formats">
             <span class="format-tag">PDF</span>
