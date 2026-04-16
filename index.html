@@ -13,15 +13,15 @@
   --bg: #f4f5f7; --white: #fff; --border: #e4e6ea; --border2: #d1d5db;
   --orange: #e8501a; --orange-dark: #c43d0e; --orange-light: #fff3ef; --orange-mid: #fde8e0;
   --green: #1a9e5f; --green-light: #e8f7f0; --green-mid: #b7ecd7;
-  --red: #dc2626; --red-light: #fee2e2; --yellow: #d97706; --yellow-light: #fef3c7;
+  --red: #dc2626; --red-light: #fee2e2;
   --text: #1a1d23; --text2: #4b5563; --text3: #9ca3af;
   --sans: 'Source Sans 3', sans-serif; --serif: 'Source Serif 4', serif;
-  --radius: 8px; --shadow: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --radius: 8px; --shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
 
-.header { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 58px; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+.header { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 58px; box-shadow: var(--shadow); }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-mark { width: 30px; height: 30px; background: var(--orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-weight: 600; color: white; font-size: 15px; }
 .logo-text { font-size: 17px; font-weight: 700; color: var(--text); }
@@ -31,25 +31,27 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 .hero-title { font-family: var(--serif); font-size: 28px; font-weight: 600; margin-bottom: 6px; }
 .hero-sub { font-size: 14px; opacity: 0.9; max-width: 440px; margin: 0 auto; line-height: 1.6; }
 
-.main { max-width: 760px; margin: 0 auto; padding: 24px 16px 40px; }
+.main { max-width: 600px; margin: 0 auto; padding: 24px 16px 40px; }
 
-/* API KEY SETUP */
-.api-setup { background: var(--orange-light); border: 1px solid var(--orange-mid); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; display: none; }
-.api-setup.show { display: block; }
-.api-setup-title { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.api-setup-sub { font-size: 12px; color: var(--text2); margin-bottom: 10px; line-height: 1.5; }
-.api-row { display: flex; gap: 8px; }
-.api-field { flex: 1; border: 1px solid var(--orange-mid); border-radius: var(--radius); padding: 9px 12px; font-size: 13px; font-family: monospace; outline: none; background: var(--white); }
-.api-field:focus { border-color: var(--orange); }
+.steps { display: flex; margin-bottom: 24px; }
+.step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+.step:not(:last-child)::after { content: ''; position: absolute; top: 15px; left: 58%; width: 84%; height: 2px; background: var(--border2); }
+.step.done::after { background: var(--orange); }
+.step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--border2); color: white; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-bottom: 5px; position: relative; z-index: 1; transition: all 0.3s; }
+.step.active .step-num { background: var(--orange); }
+.step.done .step-num { background: var(--green); }
+.step-label { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.step.active .step-label { color: var(--orange); }
+.step.done .step-label { color: var(--green); }
 
 .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; margin-bottom: 16px; }
-.card-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.card-title { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
 .card-sub { font-size: 13px; color: var(--text3); margin-bottom: 18px; }
 
 .form-group { margin-bottom: 14px; }
 .form-label { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 5px; display: block; }
 .form-label span { color: var(--orange); }
-.form-input { width: 100%; border: 1px solid var(--border2); border-radius: var(--radius); padding: 10px 13px; font-size: 14px; color: var(--text); outline: none; font-family: var(--sans); transition: border-color 0.15s; }
+.form-input { width: 100%; border: 1px solid var(--border2); border-radius: var(--radius); padding: 10px 13px; font-size: 14px; color: var(--text); outline: none; font-family: var(--sans); transition: border-color 0.15s; background: white; }
 .form-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,80,26,0.08); }
 .form-input::placeholder { color: var(--text3); }
 
@@ -70,80 +72,33 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 .btn-primary { background: var(--orange); color: white; width: 100%; justify-content: center; }
 .btn-primary:hover { background: var(--orange-dark); }
 .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
-.btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
-.btn-ghost { background: var(--white); color: var(--text2); border: 1px solid var(--border2); }
-.btn-ghost:hover { background: var(--bg); }
-.btn-green { background: var(--green); color: white; }
-.btn-green:hover { background: #148a50; }
+.btn-ghost { background: var(--white); color: var(--text2); border: 1px solid var(--border2); font-size: 13px; padding: 7px 14px; }
 
-/* PROGRESS */
-.progress-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; display: none; }
-.progress-card.show { display: block; }
-.progress-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.progress-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.status-box { border-radius: var(--radius); padding: 16px 18px; display: none; margin-bottom: 16px; }
+.status-box.show { display: block; }
+.status-box.loading { background: var(--orange-light); border: 1px solid var(--orange-mid); }
+.status-box.success { background: var(--green-light); border: 1px solid var(--green-mid); }
+.status-box.error { background: var(--red-light); border: 1px solid #fecaca; }
+.status-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.status-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+.progress-wrap { margin-top: 12px; }
+.progress-bar-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
 .progress-bar { height: 100%; background: var(--orange); border-radius: 3px; transition: width 0.4s ease; width: 0%; }
-.progress-status { font-size: 12px; color: var(--text3); }
-.progress-companies { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.co-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; border: 1px solid var(--border2); color: var(--text3); background: var(--bg); }
-.co-tag.done { background: var(--green-light); border-color: var(--green-mid); color: var(--green); }
+.progress-label { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+.co-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.co-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; border: 1px solid var(--border2); color: var(--text3); background: var(--bg); transition: all 0.3s; }
 .co-tag.active { background: var(--orange-light); border-color: var(--orange-mid); color: var(--orange); }
-.co-tag.none { background: var(--bg); border-color: var(--border); color: var(--text3); }
+.co-tag.done { background: var(--green-light); border-color: var(--green-mid); color: var(--green); }
 
-/* RESULTS */
-.results-section { display: none; }
-.results-section.show { display: block; }
-
-.results-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.results-title-big { font-size: 18px; font-weight: 700; color: var(--text); font-family: var(--serif); }
-.results-summary { font-size: 13px; color: var(--text3); margin-top: 2px; }
-
-/* MATCH CARD */
-.match-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; }
-.match-card-header { padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
-.match-score-badge { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
-.score-high { background: var(--green-light); color: var(--green); border: 2px solid var(--green-mid); }
-.score-mid { background: var(--yellow-light); color: var(--yellow); border: 2px solid #fcd34d; }
-.score-low { background: var(--red-light); color: var(--red); border: 2px solid #fecaca; }
-.match-card-info { flex: 1; min-width: 0; }
-.match-position { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.match-company { font-size: 12.5px; color: var(--orange); font-weight: 600; }
-.match-preporuka { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; }
-.prep-apliciraj { background: var(--green-light); color: var(--green); }
-.prep-razmotri { background: var(--yellow-light); color: var(--yellow); }
-.prep-preskoci { background: var(--red-light); color: var(--red); }
-.match-card-body { padding: 12px 18px; }
-.match-razlog { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
-.match-url { font-size: 12px; color: var(--orange); text-decoration: none; font-family: monospace; word-break: break-all; }
-.match-url:hover { text-decoration: underline; }
-.match-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.match-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.match-bar-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
-.match-bar-label { font-size: 11px; color: var(--text3); width: 36px; text-align: right; font-weight: 700; }
-
-/* NO RESULTS SECTION */
-.no-results-section { margin-top: 16px; }
-.no-results-toggle { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 12px 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); user-select: none; }
-.no-results-toggle:hover { background: var(--bg); }
-.no-results-label { font-size: 13.5px; font-weight: 600; color: var(--text2); display: flex; align-items: center; gap: 8px; }
-.no-results-count { font-size: 12px; background: var(--border); color: var(--text3); padding: 2px 8px; border-radius: 20px; font-weight: 700; }
-.no-results-arrow { font-size: 12px; color: var(--text3); transition: transform 0.2s; }
-.no-results-arrow.open { transform: rotate(180deg); }
-.no-results-list { display: none; background: var(--white); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 8px 16px; }
-.no-results-list.open { display: block; }
-.no-result-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); }
-.no-result-item:last-child { border-bottom: none; }
-.no-result-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
-
-/* NEW SEARCH */
-.new-search-bar { text-align: center; margin-top: 20px; padding: 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); }
-.new-search-bar p { font-size: 13px; color: var(--text3); margin-bottom: 10px; }
+.footer { text-align: center; padding: 20px; color: var(--text3); font-size: 12px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin { display: inline-block; animation: spin 0.8s linear infinite; }
 
 @media (max-width: 580px) {
   .hero { padding: 24px 16px; } .hero-title { font-size: 22px; } .card { padding: 16px; }
-  .match-card-header { flex-wrap: wrap; }
 }
 </style>
 </head>
@@ -154,48 +109,47 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
     <div class="logo-mark">J</div>
     <div class="logo-text">JobAgent</div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <span id="api-status" style="font-size:11px;color:var(--text3)">⚙️ API ključ potreban</span>
-    <button class="btn btn-ghost btn-sm" onclick="showApiSetup()">Podesi</button>
-  </div>
+  <div class="header-sub">powered by Claude AI</div>
 </header>
 
 <div class="hero">
   <div class="hero-title">Pronađi posao koji ti odgovara</div>
-  <div class="hero-sub">Uploaduj CV — AI agent pretražuje karijerne stranice i prikazuje rezultate odmah</div>
+  <div class="hero-sub">Uploaduj CV — AI agent pretražuje karijerne stranice i šalje rezultate na tvoj email</div>
 </div>
 
 <div class="main">
 
-  <!-- API KEY SETUP -->
-  <div class="api-setup" id="api-setup">
-    <div class="api-setup-title">🔑 Anthropic API ključ</div>
-    <div class="api-setup-sub">Potreban za AI analizu. Idi na <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--orange)">console.anthropic.com</a> → Create Key → kopiraj ključ (sk-ant-...). Čuva se samo u tvom browseru.</div>
-    <div class="api-row" style="margin-bottom:8px">
-      <input class="api-field" id="api-key-input" type="password" placeholder="Anthropic API ključ: sk-ant-api03-...">
-    </div>
-    <div class="api-setup-sub" style="margin-top:8px">Jina.ai ključ za čitanje stranica. Idi na <a href="https://jina.ai" target="_blank" style="color:var(--orange)">jina.ai</a> → besplatan API ključ (jina_...).</div>
-    <div class="api-row">
-      <input class="api-field" id="jina-key-input" type="password" placeholder="Jina API ključ: jina_...">
-      <button class="btn btn-primary btn-sm" style="width:auto" onclick="saveApiKey()">Sačuvaj</button>
+  <div class="steps" id="steps">
+    <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">Podaci</div></div>
+    <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Upload CV</div></div>
+    <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">Analiza</div></div>
+    <div class="step" id="step4"><div class="step-num">4</div><div class="step-label">Email</div></div>
+  </div>
+
+  <div class="status-box" id="status-box">
+    <div class="status-title" id="status-title"></div>
+    <div class="status-text" id="status-text"></div>
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
+      <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
+      <div class="progress-label" id="progress-label"></div>
+      <div class="co-tags" id="co-tags"></div>
     </div>
   </div>
 
-  <!-- FORM -->
   <div class="card" id="form-card">
     <div class="card-title">Unesi svoje podatke</div>
-    <div class="card-sub">AI agent čita CV i traži oglase koji ti odgovaraju na karijernim stranicama — rezultati se prikazuju odmah</div>
+    <div class="card-sub">AI agent čita CV i traži oglase koji ti odgovaraju — rezultati stižu na email</div>
 
     <div class="form-group">
       <label class="form-label">Ime i prezime <span>*</span></label>
       <input class="form-input" id="input-name" type="text" placeholder="npr. Ana Petrović">
     </div>
     <div class="form-group">
-      <label class="form-label">Email (za slanje kopije rezultata)</label>
+      <label class="form-label">Email za rezultate <span>*</span></label>
       <input class="form-input" id="input-email" type="email" placeholder="ana.petrovic@email.com">
     </div>
     <div class="form-group">
-      <label class="form-label">Željena lokacija rada <span>*</span></label>
+      <label class="form-label">Željena lokacija rada</label>
       <input class="form-input" id="input-location" type="text" placeholder="npr. Beograd, Novi Sad, Remote...">
     </div>
     <div class="form-group">
@@ -226,48 +180,16 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
     </button>
   </div>
 
-  <!-- PROGRESS -->
-  <div class="progress-card" id="progress-card">
-    <div class="progress-title"><span class="spin">⏳</span> <span id="progress-title-text">Analiziram oglase...</span></div>
-    <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
-    <div class="progress-status" id="progress-status">Inicijalizacija...</div>
-    <div class="progress-companies" id="progress-companies"></div>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="results-section" id="results-section">
-    <div class="results-header-row">
-      <div>
-        <div class="results-title-big" id="results-title">Rezultati analize</div>
-        <div class="results-summary" id="results-summary"></div>
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="resetForm()">↺ Nova pretraga</button>
-    </div>
-
-    <div id="match-cards-container"></div>
-
-    <div class="no-results-section" id="no-results-section" style="display:none">
-      <div class="no-results-toggle" onclick="toggleNoResults()">
-        <div class="no-results-label">
-          ℹ️ Stranice bez relevantnih oglasa
-          <span class="no-results-count" id="no-results-count">0</span>
-        </div>
-        <span class="no-results-arrow" id="no-results-arrow">▼</span>
-      </div>
-      <div class="no-results-list" id="no-results-list"></div>
-    </div>
-
-    <div class="new-search-bar">
-      <p>Analiza završena — rezultati su poslani i na email</p>
-      <button class="btn btn-ghost" onclick="resetForm()">↺ Nova pretraga</button>
-    </div>
+  <div style="text-align:center;display:none;margin-top:8px" id="new-search-wrap">
+    <button class="btn btn-ghost" onclick="resetForm()">↺ Nova pretraga</button>
   </div>
 
 </div>
 
+<div class="footer">JobAgent · powered by Claude AI · Prototip v1.0</div>
+
 <script>
-const MAKE_WEBHOOK = 'https://fancy-term-43e5.davor-odobasic.workers.dev';
-const CLAUDE_API = 'https://api.anthropic.com/v1/messages';
+const WEBHOOK = 'https://fancy-term-43e5.davor-odobasic.workers.dev';
 
 const companies = [
   { name: 'Levi9', url: 'https://jobs.rs.levi9.com/' },
@@ -278,58 +200,36 @@ const companies = [
   { name: 'Raiffeisen', url: 'https://karijera.raiffeisenbank.rs/sr/otvorene-pozicije' },
   { name: 'Infostud', url: 'https://poslovi.infostud.com' },
   { name: 'HelloWorld', url: 'https://www.helloworld.rs/oglasi' },
+  { name: 'Idea', url: 'https://www.idea.rs/Zaposlenje' },
+  { name: 'RFB', url: 'https://karijera.raiffeisenbank.rs/sr/otvorene-pozicije' },
 ];
 
 let cvText = '';
-let apiKey = localStorage.getItem('ja_apikey') || '';
-let jinaKey = localStorage.getItem('ja_jinakey') || '';
 
-function checkApiKey() {
-  if (apiKey && apiKey.startsWith('sk-ant')) {
-    document.getElementById('api-status').textContent = '✅ API ključ aktivan';
-    document.getElementById('api-setup').classList.remove('show');
-  } else {
-    document.getElementById('api-status').textContent = '⚠️ API ključ potreban';
-    document.getElementById('api-setup').classList.add('show');
-  }
-}
-
-function showApiSetup() {
-  document.getElementById('api-setup').classList.add('show');
-  document.getElementById('api-key-input').focus();
-}
-
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  const jina = document.getElementById('jina-key-input').value.trim();
-  if (val && val.startsWith('sk-ant')) {
-    apiKey = val;
-    localStorage.setItem('ja_apikey', apiKey);
-  }
-  if (jina) {
-    jinaKey = jina;
-    localStorage.setItem('ja_jinakey', jinaKey);
-  }
-  checkApiKey();
-}
-
-checkApiKey();
-
-// ——— FILE UPLOAD ———
+// Drag & drop
 const zone = document.getElementById('upload-zone');
 zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
 zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+});
 
-function handleFile(input) { if(input.files[0]) processFile(input.files[0]); }
+function handleFile(input) {
+  if (input.files[0]) processFile(input.files[0]);
+}
 
 async function processFile(file) {
-  if (!file.name.match(/\.(pdf|doc|docx)$/i)) { alert('Uploaduj PDF ili Word fajl.'); return; }
+  if (!file.name.match(/\.(pdf|doc|docx)$/i)) {
+    alert('Uploaduj PDF ili Word fajl.');
+    return;
+  }
   document.getElementById('upload-default').style.display = 'none';
   document.getElementById('upload-done').style.display = 'block';
   document.getElementById('file-name').textContent = file.name;
-  document.getElementById('file-size').textContent = (file.size/1024).toFixed(0) + ' KB · čitam...';
+  document.getElementById('file-size').textContent = (file.size / 1024).toFixed(0) + ' KB · čitam...';
   zone.classList.add('uploaded');
+  setStep(2);
 
   try {
     if (file.name.endsWith('.pdf')) {
@@ -337,19 +237,19 @@ async function processFile(file) {
     } else {
       cvText = await extractWordText(file);
     }
-    document.getElementById('file-size').textContent = (file.size/1024).toFixed(0) + ' KB · ' + cvText.length + ' karaktera izvučeno';
+    document.getElementById('file-size').textContent = (file.size / 1024).toFixed(0) + ' KB · ' + cvText.length + ' karaktera';
     const preview = document.getElementById('cv-preview-box');
     preview.style.display = 'block';
     preview.textContent = cvText.slice(0, 200) + '...';
   } catch(e) {
-    cvText = `CV: ${file.name}`;
-    document.getElementById('file-size').textContent = (file.size/1024).toFixed(0) + ' KB';
+    cvText = 'CV fajl: ' + file.name;
+    document.getElementById('file-size').textContent = (file.size / 1024).toFixed(0) + ' KB';
   }
 }
 
 async function extractPdfText(file) {
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
-  if (!pdfjsLib) return `CV fajl: ${file.name}`;
+  if (!pdfjsLib) return 'CV: ' + file.name;
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let text = '';
@@ -367,201 +267,76 @@ async function extractWordText(file) {
   return result.value.trim().slice(0, 4000);
 }
 
-// ——— ANALYSIS ———
 async function startAnalysis() {
   const name = document.getElementById('input-name').value.trim();
   const email = document.getElementById('input-email').value.trim();
   const location = document.getElementById('input-location').value.trim() || 'nije navedena';
 
   if (!name) { alert('Unesi ime i prezime.'); return; }
+  if (!email || !email.includes('@')) { alert('Unesi ispravnu email adresu.'); return; }
   if (!cvText) { alert('Uploaduj CV fajl.'); return; }
-  if (!apiKey || !apiKey.startsWith('sk-ant')) { showApiSetup(); return; }
 
   document.getElementById('submit-btn').disabled = true;
   document.getElementById('form-card').style.opacity = '0.6';
-  document.getElementById('progress-card').classList.add('show');
-  document.getElementById('results-section').classList.remove('show');
-  document.getElementById('match-cards-container').innerHTML = '';
-  document.getElementById('no-results-list').innerHTML = '';
+  setStep(3);
+
+  setStatus('loading', '🔍 Analiziram karijerne stranice...', 'AI agent pretražuje oglase i poredi ih sa tvojim CV-om. Ovo može potrajati nekoliko minuta.');
+  document.getElementById('progress-wrap').style.display = 'block';
 
   // Init company tags
-  const coContainer = document.getElementById('progress-companies');
-  coContainer.innerHTML = companies.map((co, i) => `<span class="co-tag" id="cotag-${i}">${co.name}</span>`).join('');
+  document.getElementById('co-tags').innerHTML = companies.map((co, i) =>
+    `<span class="co-tag" id="cotag-${i}">${co.name}</span>`
+  ).join('');
 
-  const matchResults = [];
-  const noResults = [];
   let done = 0;
-
   for (let i = 0; i < companies.length; i++) {
     const co = companies[i];
     document.getElementById(`cotag-${i}`).className = 'co-tag active';
-    document.getElementById('progress-status').textContent = `Analiziram ${co.name}...`;
     document.getElementById('progress-bar').style.width = Math.round((i / companies.length) * 90 + 5) + '%';
-    document.getElementById('progress-title-text').textContent = `Analiziram ${i+1} od ${companies.length} kompanija...`;
+    document.getElementById('progress-label').textContent = `${i + 1} od ${companies.length} — ${co.name}`;
 
     try {
-      // Fetch page via Cloudflare Worker → Jina (zaobilazi CORS)
-      let pageText = '';
-      try {
-        const jinaRes = await fetch(`${MAKE_WEBHOOK}?action=scrape&url=${encodeURIComponent(co.url)}&jina_key=${encodeURIComponent(jinaKey)}`, { signal: AbortSignal.timeout(20000) });
-        const jinaText = jinaRes.ok ? await jinaRes.text() : '';
-        pageText = jinaText.includes('RateLimit') || jinaText.includes('Error') ? '' : jinaText.slice(0, 4000);
-      } catch(e) {
-        pageText = '';
-      }
-      // Pauza između zahtjeva da izbjegnemo rate limit
-      await new Promise(r => setTimeout(r, 2000));
-
-      // Analyze with Claude
-      const prompt = `Analiziraj oglase sa ove karijerne stranice i uporedi sa CV-om korisnika.
-
-KORISNIK: ${name}
-ŽELJENA LOKACIJA: ${location}
-CV:
-${cvText.slice(0, 2000)}
-
-SADRZAJ STRANICE (${co.name}):
-${pageText}
-
-PRAVILA ZA LOKACIJU:
-- Ako oglas odgovara željenom gradu/lokaciji — normalan match skor
-- Ako oglas zahtijeva rad u drugom gradu — smanji match skor za 20-30% i napomeni "Zahtijeva preseljenje u [grad]"
-- Ako je oglas Remote/Hybrid — dodaj napomenu i ne smanji skor
-- Ako lokacija nije navedena u oglasu — ne smanji skor
-
-Za svaki oglas koji ima 60%+ match sa CV-om, vrati TACNO ovaj format:
-POZICIJA: [naziv]
-KOMPANIJA: [naziv kompanije]
-MATCH: [broj]%
-RAZLOG: [1-2 recenice, ukljuci napomenu o lokaciji ako je relevantno]
-URL: [link ili N/A]
-PREPORUKA: [apliciraj / razmotri / preskoci]
----
-
-Ako nema relevantnih oglasa, vrati samo: NEMA_OGLASA`;
-
-      const res = await fetch(`${MAKE_WEBHOOK}?action=claude`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
+      await fetch(`${WEBHOOK}?url=${encodeURIComponent(co.url)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cv=${encodeURIComponent(cvText.slice(0, 2000))}&location=${encodeURIComponent(location)}`, {
+        mode: 'no-cors'
       });
+    } catch(e) {}
 
-      const data = await res.json();
-      const result = data.content?.[0]?.text || 'NEMA_OGLASA';
-
-      if (result.includes('NEMA_OGLASA') || !result.includes('POZICIJA:')) {
-        noResults.push(co.name);
-        document.getElementById(`cotag-${i}`).className = 'co-tag none';
-      } else {
-        // Parse results
-        const parsed = parseResults(result, co.name);
-        matchResults.push(...parsed);
-        parsed.forEach(r => addMatchCard(r));
-        document.getElementById(`cotag-${i}`).className = 'co-tag done';
-
-        // Show results section immediately
-        document.getElementById('results-section').classList.add('show');
-      }
-
-      // Also send to Make for Airtable storage
-      if (email) {
-        fetch(`${MAKE_WEBHOOK}?url=${encodeURIComponent(co.url)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cv=${encodeURIComponent(cvText.slice(0,500))}`, { mode: 'no-cors' }).catch(() => {});
-      }
-
-    } catch(e) {
-      noResults.push(co.name + ' (greška)');
-      document.getElementById(`cotag-${i}`).className = 'co-tag none';
-    }
-
+    document.getElementById(`cotag-${i}`).className = 'co-tag done';
     done++;
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 500));
   }
 
-  // Finish
   document.getElementById('progress-bar').style.width = '100%';
-  document.getElementById('progress-title-text').textContent = 'Analiza završena!';
-  document.getElementById('progress-status').textContent = `Pronađeno ${matchResults.length} relevantnih oglasa na ${companies.length - noResults.length} kompanija`;
-
-  // Show no results
-  if (noResults.length > 0) {
-    document.getElementById('no-results-section').style.display = 'block';
-    document.getElementById('no-results-count').textContent = noResults.length;
-    document.getElementById('no-results-list').innerHTML = noResults.map(n => `
-      <div class="no-result-item"><div class="no-result-dot"></div>${n}</div>`).join('');
-  }
-
-  // Update summary
-  document.getElementById('results-title').textContent = `Pronađeno ${matchResults.length} oglasa za ${name}`;
-  document.getElementById('results-summary').textContent = `Pretraženo ${companies.length} kompanija · ${matchResults.length} relevantnih · ${noResults.length} bez odgovarajućih oglasa`;
-  document.getElementById('results-section').classList.add('show');
+  document.getElementById('progress-label').textContent = 'Završeno!';
 
   setTimeout(() => {
-    document.getElementById('progress-card').classList.remove('show');
-  }, 2000);
+    setStep(4);
+    setStatus('success', '✅ Analiza završena!', `Pretraženo ${companies.length} kompanija. Rezultati stižu na ${email} za nekoliko minuta.`);
+    document.getElementById('new-search-wrap').style.display = 'block';
+  }, 800);
 }
 
-function parseResults(text, companyName) {
-  const results = [];
-  const blocks = text.split('---').filter(b => b.trim() && b.includes('POZICIJA:'));
-  blocks.forEach(block => {
-    const get = (key) => { const m = block.match(new RegExp(key + ':\\s*(.+)')); return m ? m[1].trim() : ''; };
-    const pozicija = get('POZICIJA');
-    const kompanija = get('KOMPANIJA') || companyName;
-    const match = parseInt(get('MATCH')) || 0;
-    const razlog = get('RAZLOG');
-    const url = get('URL');
-    const preporuka = get('PREPORUKA').toLowerCase();
-    if (pozicija && match > 0) {
-      results.push({ pozicija, kompanija, match, razlog, url, preporuka });
-    }
-  });
-  return results.sort((a, b) => b.match - a.match);
+function setStatus(type, title, text) {
+  const box = document.getElementById('status-box');
+  box.className = 'status-box show ' + type;
+  document.getElementById('status-title').textContent = title;
+  document.getElementById('status-text').textContent = text;
 }
 
-function addMatchCard(r) {
-  const container = document.getElementById('match-cards-container');
-  const scoreClass = r.match >= 80 ? 'score-high' : r.match >= 60 ? 'score-mid' : 'score-low';
-  const barColor = r.match >= 80 ? 'var(--green)' : r.match >= 60 ? 'var(--yellow)' : 'var(--red)';
-  const prepClass = r.preporuka.includes('apliciraj') ? 'prep-apliciraj' : r.preporuka.includes('razmotri') ? 'prep-razmotri' : 'prep-preskoci';
-  const urlHtml = r.url && r.url !== 'N/A' ? `<a href="${r.url}" target="_blank" class="match-url">🔗 ${r.url}</a>` : '';
-
-  const card = document.createElement('div');
-  card.className = 'match-card';
-  card.innerHTML = `
-    <div class="match-card-header">
-      <div class="match-score-badge ${scoreClass}">${r.match}%</div>
-      <div class="match-card-info">
-        <div class="match-position">${r.pozicija}</div>
-        <div class="match-company">${r.kompanija}</div>
-      </div>
-      <span class="match-preporuka ${prepClass}">${r.preporuka}</span>
-    </div>
-    <div class="match-card-body">
-      <div class="match-razlog">${r.razlog}</div>
-      ${urlHtml}
-      <div class="match-bar-row">
-        <div class="match-bar-bg"><div class="match-bar-fill" style="width:${r.match}%;background:${barColor}"></div></div>
-        <div class="match-bar-label">${r.match}%</div>
-      </div>
-    </div>`;
-  container.appendChild(card);
-}
-
-function toggleNoResults() {
-  const list = document.getElementById('no-results-list');
-  const arrow = document.getElementById('no-results-arrow');
-  list.classList.toggle('open');
-  arrow.classList.toggle('open');
+function setStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('step' + i).className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
 }
 
 function resetForm() {
   cvText = '';
   document.getElementById('submit-btn').disabled = false;
   document.getElementById('form-card').style.opacity = '1';
-  document.getElementById('progress-card').classList.remove('show');
-  document.getElementById('results-section').classList.remove('show');
-  document.getElementById('no-results-section').style.display = 'none';
-  document.getElementById('match-cards-container').innerHTML = '';
+  document.getElementById('status-box').className = 'status-box';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('new-search-wrap').style.display = 'none';
   document.getElementById('upload-default').style.display = 'block';
   document.getElementById('upload-done').style.display = 'none';
   document.getElementById('upload-zone').classList.remove('uploaded');
@@ -570,6 +345,7 @@ function resetForm() {
   document.getElementById('input-email').value = '';
   document.getElementById('input-location').value = '';
   document.getElementById('cv-file').value = '';
+  setStep(1);
 }
 </script>
 </body>
